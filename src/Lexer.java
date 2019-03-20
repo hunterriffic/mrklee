@@ -41,7 +41,9 @@ public class Lexer implements Types
         try
         {
             if (ch == '\n')
+                {
                 --Lexer.lineNumber;
+                }
             inputStream.unread(ch);
         }
         catch (IOException e)

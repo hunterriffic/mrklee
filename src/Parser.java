@@ -7,7 +7,7 @@ import java.io.*;
 
 public class Parser implements Types
     {
-    private static boolean debug = true;
+    private static boolean debug = false;
     private static Lexeme current;
     private static Lexer i;
 
@@ -722,8 +722,8 @@ public class Parser implements Types
         lexInit(args[0]);
         current = i.lex();
         if (debug) current.display(); // ONLY FOR TESTING
-        varDef();
-        //program();
+        //varDef();
+        program();
         match(ENDOFFILE);
         System.out.println("Legal");
         }

@@ -1,0 +1,40 @@
+# Test 1 for MRKLEE lexical analysis
+
+# This function repeats a simple rhythm.
+funky rockOn(var repeats, var mode)
+    {
+    var genre = "rock"!
+    if mode==1 go {genre = "pop"!}
+    or if mode==2 go {genre = "jazz"!}
+    if none go {genre = "downtempo Moroccan groove"!}
+
+    var counter = 0!
+    yell("Imagine a song with this rhythm: ")!
+    while counter <= repeats
+        {
+        yell(genre)!
+        if counter != repeats go {yell(" ")!}
+        }
+
+    record 0!
+    }
+
+funky main()
+    {
+    var numOne = 1!
+    var largerNum = 10!
+
+    while numOne < largerNum
+        {
+        numOne = numOne + 1!
+        if numOne==1 go {yell("numOne is one")!}
+        or if numOne==2 go {yell("numOne is two")!}
+        if none go {yell("They're not the same")!}
+        }
+
+    yell("They're the same")!
+
+    rockOn(largerNum,2)!
+
+    record 0!
+    }

@@ -1,12 +1,13 @@
 public class Lexeme implements Types
 {
-    static String type;
-    static String string;
-    static int integer;
-    static double real;
-    static Lexeme left;
-    static Lexeme right;
+    String type;
+    String string;
+    int integer;
+    double real;
+    Lexeme left;
+    Lexeme right;
 
+    // FIXME initialize all variables in constructor
     public Lexeme(String t)
     {
         type = t;
@@ -46,35 +47,36 @@ public class Lexeme implements Types
         right = r;
     }
 
-    static void display(Lexeme l)
+    // FIXME maybe not static?
+    void display()
     {
-        if (type == "STRING") System.out.println(l.type + ": \"" + l.string + "\"");
-        else if (type == "INTEGER") System.out.println(l.type + ": " + l.integer);
-        else if (type == "REAL") System.out.println(l.type + ": " + l.real);
-        else if (type == "ID") System.out.println(l.type + ": " + l.string);
-        else if (type != "UNKNOWN") System.out.println(l.type);
+        if (type == "STRING") System.out.println(type + ": \"" + string + "\"");
+        else if (type == "INTEGER") System.out.println(type + ": " + integer);
+        else if (type == "REAL") System.out.println(type + ": " + real);
+        else if (type == "ID") System.out.println(type + ": " + string);
+        else if (type != "UNKNOWN") System.out.println(type);
     }
 
     public static Lexeme cdr(Lexeme l)
         {
-        return right;
+        return l.right;
         }
 
 
     public static void setCdr(Lexeme l, Lexeme s)
     {
-        right = s;
+        l.right = s;
     }
 
 
     public static Lexeme car(Lexeme l)
     {
-        return left;
+        return l.left;
     }
 
 
     public static void setCar(Lexeme l, Lexeme s)
     {
-        left = s;
+        l.left = s;
     }
 }

@@ -20,7 +20,7 @@ classes: $(CLASSES:.java=.class)
 recognizer : classes
 
 test1 : Parser.class
-	$(JVM) Parser test.mrk
+	$(JVM) Parser test1.mrk
 
 test2: Parser.class
 	$(JVM) Parser test2.mrk

@@ -1,0 +1,48 @@
+# Test 3 for MRKLEE lexical analysis
+
+funky harmony(var rock, var roll)
+    {
+    if rock == roll go
+        {
+        yell("now we got it!")!
+        }
+    if none go
+        {
+        yell("maybe next time")!
+        }
+    }
+
+funky melody(var tenor)
+    {
+    var alto = 1!
+    while tenor == 2
+        {
+        if alto == 1 go
+            {
+            yell("too low!")!
+            }
+        or if alto == 4 go
+            {
+            yell("too high!")!
+            }
+        if none go
+            {
+            yell("just right")!
+            }
+        alto = alto + 1!
+        }
+    alto = 7!
+    record alto!
+    }
+
+funky main()
+    {
+    var bass = 1!
+    var tenor = 2!
+    var soprano = 4!
+
+    yell("bring the beat in")!
+    harmony(alto,soprano)!
+
+    record 0!
+    }

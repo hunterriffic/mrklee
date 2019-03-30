@@ -1,0 +1,29 @@
+# Test 2 for MRKLEE lexical analysis
+
+funky singThatSong(var title)
+    {
+    yell("What song are we singing?")!
+    if title > 0 go
+        {
+        yell(title)!
+        }
+    if none go
+        {
+        yell("Nothing today")!
+        }
+    }
+
+funky main()
+    {
+    var start = 0!
+    var end = 100!
+    var title = "Despacito"!
+
+    # Now it's time to sing the song
+    while start < end
+        {
+        singThatSong(title)!
+        start = start + 1!
+        }
+    }
+

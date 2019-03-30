@@ -1,0 +1,20 @@
+# Test 4 for MRKLEE lexical analysis
+
+funky displayError()
+    {
+    yell("Hm, something went wrong.")!
+    }
+
+funky main()
+    {
+    var x = 1!
+    if x != 1 go
+        {
+        displayError()!
+        }
+    if none go
+        {
+        yell("All clear!")!
+        }
+    record 0!
+    }

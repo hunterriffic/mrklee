@@ -41,6 +41,8 @@ public interface Types
     public static final String IF_STATE = "IF_STATE";
     public static final String ALT_IF_STATE = "ALT_IF_STATE";
     public static final String OR_IF_STATE = "OR_IF_STATE";
+    public static final String IF_NONE_STATE = "IF_NONE_STATE";
+    public static final String IFNONE = "IFNONE";
     public static final String STATEMENT = "STATEMENT";
     public static final String STATEMENT_LIST = "STATEMENT_LIST";
     public static final String BLOCK = "BLOCK";
@@ -63,5 +65,14 @@ public interface Types
     public static final String PRINT = "PRINT";
     public static final String PRINT_ITEM = "PRINT_ITEM";
     public static final String RETURN_STATEMENT = "RETURN_STATE";
-    public static final String IF_NONE = "IF_NONE";
+    public static final String JOIN = "JOIN";
+    public static final String ENV = "ENV";
+    public static final String VALUES = "VALUES";
+    public static final String VALUE = "VALUE";
+    public static final String VARIABLE = "VARIABLE";
+    public static final String CHAR = "CHAR";
+    public static final String LAMBDA = "LAMBDA";
+    public static final String CLOSURE = "CLOSURE";
+    public static final String FNAME = "FNAME";
+
 }

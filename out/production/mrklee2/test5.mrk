@@ -1,0 +1,28 @@
+# Test 5 for MRKLEE lexical analysis. This test has been designed to fail.
+
+funky main()
+    {
+    # Here's a sad attempt at writing in MRKLEE style
+    var i = 7!
+    var ch = a!
+
+    if i == a go
+        {
+        yell("somehow equal")!
+        }
+
+    printf("this is a bad program!")!
+
+    while i < 17 yell if
+        {
+        if i / 2 go
+            {
+            yell("i is 8!")!
+            }
+        if none go
+            {
+            yell("i is not 8")!
+            }
+        i = i + 1!
+        }
+    }

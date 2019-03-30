@@ -56,17 +56,7 @@ public class Parser implements Types
 
     public static Lexeme cons(String type, Lexeme l, Lexeme r)
         {
-        if (debug)
-            {
-            System.out.print("CONS pre-set: current is ");
-                current.display();
-            }
         Lexeme q = new Lexeme(type,l,r);
-        if (debug)
-            {
-            System.out.print("CONS post-set: current is ");
-            current.display();
-            }
         return q;
         }
 
@@ -75,23 +65,20 @@ public class Parser implements Types
     /*             PROGRAM
      *          /          \
      *      fdef()         GLUE
-     *                     /    \
-     *                  block()  GLUE
-     *                           /
-     *                  program() || null
+     *                     /
+     *                program() || null
      */
     public static Lexeme program() throws IOException
         {
         if (debug) System.out.println("INSIDE OF PROGRAM");
-        Lexeme f,b,p;
+        Lexeme f;
+        Lexeme p = null;
         f = fdef();
-        b = block();
         if (programPending())
             {
             p = program();
-            return cons(PROGRAM,f,cons(GLUE,b,cons(GLUE,p,null)));
             }
-        return cons(PROGRAM,f,cons(GLUE,b,null));
+        return cons(PROGRAM,f,cons(GLUE,p,null));
         }
 
     public static boolean programPending()
@@ -101,7 +88,9 @@ public class Parser implements Types
 
     /*             FDEF
      *          /         \
-     *      ID         zeroParamList()
+     *      ID                GLUE
+     *                      /       \
+     *            zeroParamList()   block()
      */
     public static Lexeme fdef() throws IOException
         {
@@ -111,7 +100,8 @@ public class Parser implements Types
         match(OPAREN);
         Lexeme z = zeroParamList();
         match(CPAREN);
-        return cons(FDEF,i,z);
+        Lexeme b = block();
+        return cons(FDEF,i,(cons(GLUE,z,b)));
         }
 
     public static boolean fdefPending()
@@ -121,7 +111,7 @@ public class Parser implements Types
 
     /*        ZERO_PARAM_LIST
      *          /
-     *      paramList()
+     *      paramList() || null
      */
     public static Lexeme zeroParamList() throws IOException
         {
@@ -220,6 +210,7 @@ public class Parser implements Types
         {
         if (debug) System.out.println("INSIDE OF STATEMENT LIST");
         Lexeme s = statement();
+
         Lexeme l = null;
         if (statementListPending())
             {
@@ -235,8 +226,8 @@ public class Parser implements Types
 
     /*                  STATEMENT
      *                   /
-     * ifState() || whileLoop() || printCommand() || varDef() || block()
-     * || assignment() || fcall() || returnState()
+     * ifState() || whileLoop() || print() || varDef() || block()
+     * unary() || returnState() || lambdaFunc()
      */
     public static Lexeme statement() throws IOException
         {
@@ -252,19 +243,28 @@ public class Parser implements Types
             x = varDef();
         else if (blockPending())
             x = block();
-        else if (idStatementPending())
-            x = idStatement();
+        else if (unaryPending())
+            {
+            x = unary();
+            if (check(EXCLAMATION)) match(EXCLAMATION);
+            }
         else if (returnStatementPending())
             x = returnStatement();
+        else if (lambdaFuncPending())
+            x = lambdaFunc();
         else
+            {
+            System.out.println("ERROR: statement is NULL");
             x = null;
+            }
         return cons(STATEMENT,x,null);
         }
 
     public static boolean statementPending()
         {
         return ifStatePending() || whileLoopPending() || printPending() || varDefPending() ||
-                blockPending() || idStatementPending() || returnStatementPending();
+                blockPending() || assignPending() || unaryPending() || returnStatementPending() ||
+                lambdaFuncPending();
         }
 
     /*           IF_STATEMENT
@@ -297,7 +297,7 @@ public class Parser implements Types
 
     /*           ALT_IF_STATEMENT
      *          /
-     *      orIfState() || block() || null
+     *      orIfState() || ifNoneState() || null
      */
     public static Lexeme altIfState() throws IOException
         {
@@ -306,22 +306,19 @@ public class Parser implements Types
         if (orIfStatePending())
             {
             i = orIfState();
-            return i;       // FIXME how to handle?
+            return i;
             }
-        else if (check(IF))
+        else if (ifNoneStatePending())
             {
-            match(IF);
-            match(NONE);
-            match(GO);
-            i = block();
-            return cons(IF_NONE,i,null); // FIXME how to handle?
+            i = ifNoneState();
+            return i;
             }
         return null;
         }
 
     public static boolean altIfStatePending()
     {
-        return orIfStatePending() || check(IF);
+        return orIfStatePending() || ifNoneStatePending();
     }
 
     /*           OR_IF_STATEMENT
@@ -330,7 +327,7 @@ public class Parser implements Types
      *                      /   \
      *                  block()  GLUE
      *                           /
-     *                     altIfState()
+     *                     altIfState() || null
      */
     public static Lexeme orIfState() throws IOException
         {
@@ -354,6 +351,23 @@ public class Parser implements Types
         return check(OR);
     }
 
+    /*         IF_NONE_STATEMENT
+     *          /
+     *      block()
+     */
+    public static Lexeme ifNoneState() throws IOException
+        {
+        match(IFNONE);
+        match(GO);
+        Lexeme b = block();
+        return cons(IF_NONE_STATE,b,null);
+        }
+
+    public static boolean ifNoneStatePending()
+        {
+        return (check(IFNONE));
+        }
+
     /*              EXPR
      *          /           \
      *      unary()   checkVal() || op() || null
@@ -361,6 +375,7 @@ public class Parser implements Types
     public static Lexeme expr() throws IOException
         {
         if (debug) System.out.println("INSIDE OF EXPR");
+
         Lexeme u = unary();
         Lexeme p = null;
         if (checkValuePending())
@@ -381,7 +396,7 @@ public class Parser implements Types
 
     /*                     UNARY
      *                   /
-     *      STRING || INTEGER || REAL || varDec() || idUnary()
+     *      STRING || INTEGER || REAL || CHAR || idStatement() || lambdaFunc()
      */
     public static Lexeme unary() throws IOException
         {
@@ -393,38 +408,82 @@ public class Parser implements Types
             return match(INTEGER);
         else if (check(REAL))
             return match(REAL);
-        else if (idUnaryPending())
-            return idUnary();       //FIXME might need cons?
+        else if (check(CHAR))
+            return match(CHAR);
+        else if (idStatementPending())
+            return idStatement();
+        else if (lambdaFuncPending())
+            return lambdaFunc();
         return v;
         }
 
     public static boolean unaryPending()
         {
-        return check(STRING) || check(INTEGER) || check(REAL) || idUnaryPending();
+        return check(STRING) || check(INTEGER) || check(REAL) || check(CHAR) || idStatementPending() || lambdaFuncPending();
         }
 
-    /*        ID_UNARY
+    /*      ID_STATE
      *       /      \
-     *     ID       fcall()
+     *     ID      assignment() || fcall() || null
      */
-    public static Lexeme idUnary() throws IOException
+    public static Lexeme idStatement() throws IOException
         {
-        if (debug) System.out.println("INSIDE OF ID_UNARY");
-        Lexeme f = null;
+        if (debug) System.out.println("INSIDE OF ID_STATE");
         Lexeme i = match(ID);
-        if (fcallPending())
-            f = fcall();
-        return cons(ID_UNARY,i,f);
+        Lexeme p = null;
+        if (assignPending())
+            p = assignment();
+        else if (fcallPending())
+            p = fcall();
+        return cons(ID_STATEMENT,i,p);
         }
 
-    public static boolean idUnaryPending()
-    {
+    public static boolean idStatementPending()
+        {
         return check(ID);
-    }
+        }
+
+    /*        IDUNARY
+     *       /      \
+     *     ID   fcall() || null
+     */
+//    public static Lexeme idUnary() throws IOException
+//        {
+//        Lexeme i = match(ID);
+//        Lexeme f = null;
+//        if (fcallPending()) f = fcall();
+//        return cons(ID_UNARY,i,f);
+//        }
+//
+//    public static boolean idUnaryPending()
+//        {
+//        return check(ID);
+//        }
+
+    /*     LAMBDA
+     *    /      \
+     * NULL       GLUE
+     *           /    \
+     * zeroParamList()  block()
+     */
+    public static Lexeme lambdaFunc() throws IOException
+        {
+        match(LAMBDA);
+        match(OPAREN);
+        Lexeme z = zeroParamList();
+        match(CPAREN);
+        Lexeme b = block();
+        return cons(LAMBDA,null,(cons(GLUE,z,b)));
+        }
+
+    public static boolean lambdaFuncPending()
+        {
+        return check(LAMBDA);
+        }
 
     /*        FCALL
      *       /
-     *  zeroArgList()
+     *   zeroArgList()
      */
     public static Lexeme fcall() throws IOException
         {
@@ -432,7 +491,6 @@ public class Parser implements Types
         match(OPAREN);
         Lexeme z = zeroArgList();
         match(CPAREN);
-        match(EXCLAMATION);
         return cons(FCALL,z,null);
         }
 
@@ -485,50 +543,50 @@ public class Parser implements Types
     }
 
     /*     CHECK_VAL (named after check type)
-     *       /      \
-     *  (type)      unary
+     *       /
+     *  unary()
      */
     public static Lexeme checkValue() throws IOException
         {
         if (debug) System.out.println("INSIDE OF CHECK_VAL");
-        Lexeme u = null;
+        Lexeme v = null;
         if (check(LESS_THAN))
             {
             match(LESS_THAN);
-            u = unary();
-            return cons(LESS_THAN,u,null);
+            v = unary();
+            return cons(LESS_THAN,v,null);
             }
         else if (check(LESS_EQUALS))
             {
             match(LESS_EQUALS);
-            u = unary();
-            return cons(LESS_EQUALS,u,null);
+            v = unary();
+            return cons(LESS_EQUALS,v,null);
             }
         else if (check(GREATER_THAN))
             {
             match(GREATER_THAN);
-            u = unary();
-            return cons(GREATER_THAN,u,null);
+            v = unary();
+            return cons(GREATER_THAN,v,null);
             }
         else if (check(GREATER_EQUALS))
             {
             match(GREATER_EQUALS);
-            u = unary();
-            return cons(GREATER_EQUALS,u,null);
+            v = unary();
+            return cons(GREATER_EQUALS,v,null);
             }
         else if (check(EQUAL_TO))
             {
             match(EQUAL_TO);
-            u = unary();
-            return cons(EQUAL_TO,u,null);
+            v = unary();
+            return cons(EQUAL_TO,v,null);
             }
         else if (check(NOT_EQUAL_TO))
             {
             match(NOT_EQUAL_TO);
-            u = unary();
-            return cons(NOT_EQUAL_TO,u,null);
+            v = unary();
+            return cons(NOT_EQUAL_TO,v,null);
             }
-        return u;
+        return null;
         }
 
     public static boolean checkValuePending()
@@ -538,8 +596,8 @@ public class Parser implements Types
         }
 
     /*     OP (named after op type)
-     *       /      \
-     *  (type)      unary
+     *       /
+     *  unary
      */
     public static Lexeme op() throws IOException
         {
@@ -549,25 +607,25 @@ public class Parser implements Types
             {
             match(PLUS);
             u = unary();
-            return cons(PLUS,u, null);
+            return cons(PLUS,u,null);
             }
         else if (check(MINUS))
             {
             match(MINUS);
             u = unary();
-            return cons(MINUS, u, null);
+            return cons(MINUS,u,null);
             }
         else if (check(TIMES))
             {
             match(TIMES);
             u = unary();
-            return cons(TIMES, u, null);
+            return cons(TIMES,u,null);
             }
         else if (check(BY))
             {
             match(BY);
             u = unary();
-            return cons(BY, u, null);
+            return cons(BY,u,null);
             }
         return u;
         }
@@ -587,7 +645,7 @@ public class Parser implements Types
         match(WHILE);
         Lexeme e = expr();
         Lexeme b = block();
-        return cons(WHILE,e,b);
+        return cons(WHILE_LOOP,e,b);
         }
 
     public static boolean whileLoopPending()
@@ -639,14 +697,14 @@ public class Parser implements Types
 
     /*        VAR_DEF
      *       /      \
-     *  varDec()    unary()
+     *  varDec()    expr()
      */
     public static Lexeme varDef() throws IOException
         {
         if (debug) System.out.println("INSIDE OF VAR_DEF");
         Lexeme v = varDec();
         match(ASSIGN);
-        Lexeme u = unary();
+        Lexeme u = expr();
         match(EXCLAMATION);
         return cons(VAR_DEF,v,u);
         }
@@ -658,43 +716,19 @@ public class Parser implements Types
 
     /*       ASSIGNMENT
      *       /
-     *  expr()
+     *     expr()
      */
     public static Lexeme assignment() throws IOException
         {
         if (debug) System.out.println("INSIDE OF ASSIGNMENT");
-        Lexeme x = null;
         match(ASSIGN);
-        x = expr();
-        match(EXCLAMATION);
-        return cons(ASSIGNMENT,x,null);
+        Lexeme y = expr();
+        return cons(ASSIGNMENT,y,null);
         }
 
     public static boolean assignPending()
     {
         return check(ASSIGN);
-    }
-
-    /*       ID_STATE
-     *       /      \
-     *      ID      assignment() || fcall()
-     */
-    public static Lexeme idStatement() throws IOException
-        {
-        if (debug) System.out.println("INSIDE OF ID_STATE");
-        Lexeme i = null;
-        Lexeme p = null;
-        i = match(ID);
-        if (assignPending())
-            p = assignment();
-        else if (fcallPending())
-            p = fcall();
-        return cons(ID,i,p);
-        }
-
-    public static boolean idStatementPending()
-    {
-        return check(ID);
     }
 
     /*       RETURN_STATEMENT
@@ -717,14 +751,236 @@ public class Parser implements Types
 
     /***** End of grammar rule functions*****/
 
-    public static void main(String args[]) throws IOException
+    public static void pp(Lexeme tree) {
+        switch (tree.type) {
+            case INTEGER:
+                System.out.print(tree.value);
+                break;
+            case REAL:  // FIXME printing issues?
+                System.out.print(tree.value);
+                break;
+            case ID:    // FIXME printing changes
+                System.out.print(tree.value);
+                break;
+            case STRING:
+                System.out.print('\"' + tree.value.toString() + '\"');
+                break;
+            case CHAR:  // FIXME check
+                System.out.print('\'' + tree.value.toString() + '\'');
+                break;
+            case PROGRAM:
+                pp(tree.left);
+                if (tree.right.left != null)
+                    pp(tree.right.left);
+                break;
+            case FDEF:
+                System.out.print("funky ");
+                pp(tree.left);
+                System.out.print("(");
+                if (tree.right.left != null) pp(tree.right.left);
+                System.out.print(") ");
+                if (tree.right.right != null) pp(tree.right.right);
+                break;
+            case ZERO_PARAM_LIST:
+                if (tree.left != null) pp(tree.left);
+                break;
+            case PARAM_LIST:
+                pp(tree.left);
+                if (tree.right != null)
+                    {
+                    System.out.print(", ");
+                    pp(tree.right);
+                    }
+                break;
+            case VAR_DEC:
+                System.out.print("var ");
+                pp(tree.left);
+                break;
+            case BLOCK:
+                System.out.print("{ ");
+                pp(tree.left);
+                System.out.print("} ");
+                break;
+            case STATEMENT_LIST:
+                //System.out.print("[statement list]: ");
+                pp(tree.left);
+                if (tree.right != null)
+                {
+                    //System.out.print("[SL is not null]: ");
+                    pp(tree.right);
+                }
+                break;
+            case STATEMENT:
+                pp(tree.left);
+                if (tree.left.type.equals(ID_STATEMENT)) System.out.print("! ");
+                break;
+            case IF_STATE:
+                System.out.print("if ");
+                pp(tree.left);
+                System.out.print(" go ");
+                pp(tree.right.left);
+                if (tree.right.right != null) pp(tree.right.right.left);
+                break;
+            case ALT_IF_STATE:
+                if (tree.left != null) pp(tree.left);
+                break;
+            case OR_IF_STATE:
+                System.out.print("or if ");
+                pp(tree.left);
+                System.out.print(" go ");
+                pp(tree.right.left);
+                if (tree.right.right.left != null) pp(tree.right.right.left);
+                break;
+            case IF_NONE_STATE:
+                System.out.print("ifnone go ");
+                pp(tree.left);
+                break;
+            case EXPR:
+                pp(tree.left);
+                if (tree.right != null) pp(tree.right);
+                break;
+            case UNARY:
+                if (tree.left != null) pp(tree.left);
+                break;
+            case ID_STATEMENT:
+                //System.out.print("[idStatement]: ");
+                pp(tree.left);
+                System.out.print(" ");
+                if (tree.right != null) pp(tree.right);
+                break;
+/*            case ID_UNARY:
+                //System.out.print("[ID_UNARY] ");
+                pp(tree.left);
+                if (tree.right != null) pp(tree.right);
+                break;*/
+            case LAMBDA:
+                System.out.print("lamdba(");
+                pp(tree.right.left);
+                System.out.print(") ");
+                pp(tree.right.right);
+                break;
+            case FCALL:
+                System.out.print("(");
+                pp(tree.left);
+                System.out.print(")");
+                break;
+            case ZERO_ARG_LIST:
+                //System.out.print("[zero_arg_list] ");
+                if (tree.left != null) pp(tree.left);
+                break;
+            case ARG_LIST:
+                pp(tree.left);
+                if (tree.right != null)
+                    {
+                    System.out.print(", ");
+                    pp(tree.right);
+                    }
+                break;
+            case LESS_THAN: // start check_value cases
+                System.out.print(" < ");
+                pp(tree.left);
+                break;
+            case LESS_EQUALS:
+                System.out.print(" <= ");
+                pp(tree.left);
+                break;
+            case GREATER_THAN:
+                System.out.print(" > ");
+                pp(tree.left);
+                break;
+            case GREATER_EQUALS:
+                System.out.print(" >= ");
+                pp(tree.left);
+                break;
+            case EQUAL_TO:
+                System.out.print(" == ");
+                pp(tree.left);
+                break;
+            case NOT_EQUAL_TO:
+                System.out.print(" != ");
+                pp(tree.left);
+                break;
+            case PLUS:  // start OP cases
+                System.out.print(" + ");
+                pp(tree.left);
+                break;
+            case MINUS:
+                System.out.print(" - ");
+                pp(tree.left);
+                break;
+            case TIMES:
+                System.out.print(" * ");
+                pp(tree.left);
+                break;
+            case BY:
+                System.out.print(" / ");
+                pp(tree.left);
+                break;
+            case WHILE_LOOP:
+                System.out.print("while ");
+                pp(tree.left);
+                pp(tree.right);
+                break;
+            case PRINT:
+                System.out.print("yell(");
+                pp(tree.left);
+                System.out.print(")!");
+                break;
+            case PRINT_ITEM:
+                if (tree.left.type.equals(STRING))
+                    {
+                    System.out.print("\"");
+                    pp(tree.left);
+                    System.out.print("\"");
+                    }
+                else
+                    {
+                    pp(tree.left);
+                    }
+                break;
+            case VAR_DEF:
+                pp(tree.left);
+                System.out.print(" = ");
+                pp(tree.right);
+                System.out.print("! ");
+                break;
+            case ASSIGNMENT:
+                System.out.print(" = ");
+                pp(tree.left);
+                break;
+            case RETURN_STATEMENT:
+                System.out.print("record ");
+                pp(tree.left);
+                System.out.print("! ");
+                break;
+            default:
+                System.out.print(" ~bad " + tree.type + " expression~ ");
+                break;
+        }
+    }
+
+    public static Lexeme parse(String fileName) throws IOException
+        {
+        lexInit(fileName);
+        current = i.lex();
+        Lexeme p = program();
+        pp(p);
+        match(ENDOFFILE);
+        System.out.println("\nLegal");
+        return p;
+        }
+
+    public static void main(String[] args) throws IOException
         {
         lexInit(args[0]);
         current = i.lex();
         if (debug) current.display(); // ONLY FOR TESTING
         //varDef();
-        program();
+        Lexeme p = program();
+        pp(p);
         match(ENDOFFILE);
-        System.out.println("Legal");
+        System.out.println("\n");
+        //Lexeme env = Environment.createEnv();
+        System.out.println("\nLegal");
         }
     }

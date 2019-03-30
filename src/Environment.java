@@ -5,29 +5,55 @@
 
 public class Environment implements Types {
 
-    // should have 2 parallel linked lists
-    Lexeme newEnvironment()
+    static boolean debug = true;
+    static Lexeme cons(String type, Lexeme l, Lexeme r) { return new Lexeme(type, l, r); }
+    static Lexeme car(Lexeme l) {
+        return l.left;
+    }
+    static Lexeme cdr(Lexeme l) {
+        return l.right;
+    }
+    static void setCar(Lexeme l, Lexeme s) {
+        l.left = s;
+    }
+    static void setCdr(Lexeme l, Lexeme s) {
+        l.right = s;
+    }
+
+    static Lexeme createEnv()
         {
-        return cons(ENV,cons(TAB,NULL,NULL),NULL);
+        if (debug) System.out.println("Creating a new environment");
+        Lexeme env = cons(ENV,cons(VALUES,null,null),null);
+        if (debug)
+            {
+            System.out.print("The environment is ");
+            env.display();
+            System.out.print("\n");
+            }
+        return env;
         }
 
-    /* Returns a lexeme whose left pointer is the second argument, whose right pointer is the third argument, whose type is the first argument. */
-    public static Lexeme cons(String type, Lexeme l, Lexeme r)
+    static boolean sameVariable(String variable, Lexeme check)
         {
-        return Lexeme(type,l,r);
+        System.out.println("check's value is " + check.value.toString() +", and variable is " + variable);
+        check.display();
+        if (variable.equals(check.value.toString())) {
+            return true;
+        }
+        else return false;
         }
 
-    /* Finding the value of a variable simply means looking up a variable/value in the first two lists of an environment structure. */
-    /* If it is not there, we lookup the variable in the next two lists and so on. */
-    public static Lexeme lookup(String variable, Lexeme env)
+    static Lexeme lookupEnv(String variable, Lexeme env)
         {
+        if (debug) System.out.println("Looking for value in environment");
         while (env != null)
             {
-            vars = car(env);
-            vals = car(cdr(env));
+            Lexeme table = car(env);
+            Lexeme vars = car(table);
+            Lexeme vals = cdr(table);
             while (vars != null)
                 {
-                if (sameVariable(variable,car(vars)))   // will need to write this
+                if (sameVariable(variable,car(vars)))
                     {
                     return car(vals);
                     }
@@ -36,105 +62,125 @@ public class Environment implements Types {
                 }
             env = cdr(env);
             }
-
-        System.out.println("Variable ", variable, " is undefined");
-
+        System.out.println("ERROR: variable " + variable + " is undefined");
         return null;
         }
 
-    /* The update function is similar, only setCar is used to set the appropriate car pointer of the values list. */
-    public static void update(String variable, Lexeme env, String updated)
+    static Lexeme update(String variable, Lexeme env, Object replacement)
         {
+        if (debug) System.out.println("Updating value in environment");
         while (env != null)
             {
-            vars = car(env);
-            vals = car(cdr(env));
+            Lexeme table = car(env);
+            Lexeme vars = car(table);
+            Lexeme vals = cdr(table);
             while (vars != null)
                 {
-                if (sameVariable(variable,car(vars)))   // will need to write this
+                if (sameVariable(variable,car(vars)))
                     {
-                    setCar(vals, updated); // is this right?
-                    }
-                vars = cdr(vars);
-                vals = cdr(vals);
-                }
-            env = cdr(cdr(env));
-            }
-
-        System.out.println("Variable ", variable, " is undefined");
-
-        return null;
-        }
-
-    /* A variable is inserted into the local environment any time a simple variable is declared or a function defined. */
-    /* Note that the local environment is represented as the first two parallel lists in a list of environments. */
-    public static void insert(Lexeme env, String id, String val)    // what is the type for variable??
-        {
-        setCar(car(env),cons(id,car(car(env))));
-        setCdr(car(env),cons(​v,​val,cdr(car(env))));
-        return val;
-        }
-
-    /* This is the step is performed for a function call; a new environment is created, populated with the local parameters and values, and finally pointed to the defining environment. */
-    /* The populating step is performed by cons-ing on a list of variables and a list of values onto the environment list containing the defining environment. */
-    public static Lexeme extend(variables,values,env)
-        {
-        return cons(ENV,variables,cons(ENV,values,env));
-        }
-
-    public static Lexeme newScope(Lexeme env, Lexeme vars, Lexeme vals)
-        {
-        return cons(E, cons(T,vars,vals), env);
-        }
-
-
-
-
-
-
-
-
-
-
-
-    function getVal(env,id)
-        {
-        while (env != NULL) // walk id and val table in parallel
-            {
-            vars = car(car(env));
-            vals = cdr(car(env));
-            while (vars != NULL)
-                {
-                if (sameVar(id,car(vars)))
+                    Lexeme r = car(vals);
+                    r.value = replacement;
+                    setCar(vals,r);
                     return car(vals);
+                    }
                 vars = cdr(vars);
                 vals = cdr(vals);
                 }
             env = cdr(env);
             }
+            System.out.println("ERROR: variable " + variable + " is undefined");
+            return null;
         }
 
-
-
-
-
-
-
-
-
-
-
-    function create()
+    static Lexeme insertEnv(Lexeme variable, Lexeme value, Lexeme env)
         {
-        return extend(nil,nil,nil);
+        if (debug)
+            {
+            System.out.print("Adding variable ");
+            variable.display();
+            System.out.println(" with value " + variable.value.toString() + " and value type:");
+            value.display();
+            }
+        Lexeme table = car(env);
+        setCar(table,cons(JOIN,variable,car(table)));
+        setCdr(table,cons(JOIN,value,cdr(table)));
+        return value;
         }
 
-
-    public static void main()
+    static Lexeme extendEnv(Lexeme variables, Lexeme values, Lexeme env)
         {
-        env = newEnv();
-        tree = parse(fileName);
-        // print stuff?
+        if (debug)
+            {
+            System.out.print("Extending the environment with ");
+            variables.display();
+            System.out.print(" and ");
+            values.display();
+            System.out.print("\n");
+            }
+        return cons(ENV, cons(VALUES, variables, values), env);
         }
+    /*
+    // displaying the environment; this function should have two forms; one form displays only the local table, the other all tables
+    static void printAllEnvironments(Lexeme tree)
+        {
+            int i = 0;
+            while (tree != null)
+                {
+                System.out.println("Table " + i + ":");
+                System.out.println("ID \'" + car(tree).value +"/' is" + cdr(tree));
+                }
+        }
+    */
+    public static void main(String[] args)
+        {
+//        Lexeme env = createEnv();
+//        Lexeme x = new Lexeme(INTEGER,5);
+//        insertEnv(x,x,env);
+        //Parser tree =  new Parser;
+        System.out.println("Creating new Environment");
+        Lexeme GlobalTree = createEnv();
+        //printAllEnvironments(GlobalTree);
+        System.out.println("Inserting variable \'x\' with value 3");
+        Lexeme idLexeme = new Lexeme(ID, "x");
+        Lexeme valLexeme = new Lexeme(INTEGER, 3);
+        insertEnv(idLexeme, valLexeme, GlobalTree);
 
-}
+        //printAllEnvironments(GlobalTree);
+
+        System.out.println("Extending the environment with y:4 and z:\"hello\"\n");
+        Lexeme localTree = createEnv();
+        idLexeme = new Lexeme(ID, "y");
+        valLexeme = new Lexeme(INTEGER, 4);
+        System.out.println("ID \'y\' has value " + insertEnv(idLexeme, valLexeme, localTree).value);
+        idLexeme = new Lexeme(ID, "z");
+        valLexeme = new Lexeme(STRING, "hello");
+        insertEnv(idLexeme, valLexeme, localTree);
+        System.out.println("EXTENDING...");
+        GlobalTree = extendEnv(car(car(localTree)), cdr(car(localTree)), GlobalTree);
+        //printAllEnvironments(GlobalTree);
+
+        System.out.println("Inserting variable w with value \"why\" into most local environment");
+
+        idLexeme = new Lexeme(ID, "w");
+        valLexeme = new Lexeme(STRING, "why");
+        System.out.println("ID \'w\' has value " + insertEnv(idLexeme, valLexeme, GlobalTree).value);
+        System.out.println();
+
+
+        //printAllEnvironments(GlobalTree);
+
+        System.out.println("Finding value of variable y");
+        System.out.println("ID \'y\' has value " + lookupEnv("y", GlobalTree).value);
+        System.out.println();
+        System.out.println("Finding value of variable x");
+        System.out.println("ID \'x\' has value " + lookupEnv("x", GlobalTree).value);
+        System.out.println();
+        System.out.println("Updating value of variable x to 6");
+        System.out.println("ID \'x\' value updated to " + update("x", GlobalTree,6).value);
+        System.out.println();
+        //printAllEnvironments(GlobalTree);
+        System.out.println();
+
+        System.exit(0);
+        }
+    }

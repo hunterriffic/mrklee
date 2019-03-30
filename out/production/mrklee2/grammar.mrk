@@ -1,0 +1,125 @@
+MRKLEE - Modern Right-reKursive Language for Everyday Expression
+a programming language by Hunter James
+
+Main Features:
+- line ends are notated by exclamation points
+- to print,the command "yell" is used
+- "if...go"
+- "funky" definitions
+- "record" to return
+- '#' signifies comments
+
+program
+    : function_def block
+    | function_def block program
+
+statement 
+    : if_statement
+    | while_loop
+    | print_command
+    | var_def
+    | block
+    | assignment
+    | function_call
+    | return_statement
+
+if_statement
+    : IF expr GO block
+    | IF expr GO block alt_if_statement
+
+alt_if_statement
+    : or_if_statement
+    | IF NONE GO block
+    | EMPTY
+
+or_if_statement
+    : OR IF expr GO block alt_if_statement
+
+statement_list
+    : statement
+    | statement statement_list
+
+block
+    : OBRACE statement_list CBRACE
+
+while_loop
+    : WHILE expr block
+
+expr 
+    : unary check_value
+    | unary op
+    | unary
+
+check_value
+    : LESS_THAN unary
+    | LESS_EQUALS unary
+    | GREATER_THAN unary
+    | GREATER_EQUALS unary
+    | EQUAL_TO unary
+    | NOT_EQUAL_TO unary
+
+op
+    : PLUS unary
+    | MINUS unary
+    | TIMES unary
+    | BY unary
+
+assignment
+    : ASSIGN expr EXCLAMATION
+
+id_statement
+    : ID assignment
+    : ID function_call
+
+unary
+    : STRING
+    | INTEGER
+    | REAL
+    | id_unary
+
+id_unary
+    : ID
+    | ID function_call
+
+var_dec
+    : VAR ID
+
+var_def 
+    : var_dec EQUALS unary EXCLAMATION
+
+param_list
+    : var_dec
+    | var_dec COMMA param_list
+
+zero_param_list
+    : param_list
+    | EMPTY
+
+arg_list
+    : expr
+    | expr COMMA arg_list
+
+zero_arg_list
+    : arg_list
+    | EMPTY
+
+function_call
+    : OPAREN zero_arg_list CPAREN EXCLAMATION
+
+function_def 
+    : FUNKY ID OPAREN zero_param_list CPAREN
+
+print_command
+    : YELL OPAREN print_item CPAREN EXCLAMATION
+
+print_item
+    : DOUBLE_QUOTE STRING DOUBLE_QUOTE
+    | expr
+    | unary
+
+return_statement
+    : RECORD expr EXCLAMATION  
+
+
+
+

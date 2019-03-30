@@ -272,6 +272,8 @@ public class Recognizer implements Types
             match(INTEGER);
         else if (check(REAL))
             match(REAL);
+        else if (check(CHAR))
+            match(CHAR);
         else if (varDecPending())
             varDec();
         else if (idUnaryPending())

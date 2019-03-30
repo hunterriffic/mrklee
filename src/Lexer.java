@@ -96,8 +96,8 @@ public class Lexer implements Types
                 return new Lexeme(IF);
             case "or":
                 return new Lexeme(OR);
-            case "none":
-                return new Lexeme(NONE);
+            case "ifnone":
+                return new Lexeme(IFNONE);
             case "go":
                 return new Lexeme(GO);
             case "while":
@@ -110,6 +110,8 @@ public class Lexer implements Types
                 return new Lexeme(FUNCTION);
             case "var":
                 return new Lexeme(VAR);
+            case "lambda":
+                return new Lexeme(LAMBDA);
             default: // must be a ID (variable name)!
                 return new Lexeme(ID, token);
         }

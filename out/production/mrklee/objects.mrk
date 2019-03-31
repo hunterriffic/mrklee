@@ -1,0 +1,7 @@
+# OBJECTS example
+
+funky main()
+{
+    yell("Objects are not yet implemented in MRKLEE.")!
+    record!
+}

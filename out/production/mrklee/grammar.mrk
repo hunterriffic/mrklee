@@ -42,6 +42,8 @@ statement
     | block
     | unary EXCLAMATION
     | return_statement
+    | array_dec
+    | array_assign
 
 if_statement
     : IF expr GO block
@@ -75,6 +77,7 @@ id_statement
     : ID
     | ID function_call
     | ID assignment
+    | ID arrayCall
 
 function_call
     : OPAREN zero_arg_list CPAREN
@@ -118,6 +121,15 @@ var_def
 
 assignment
     : ASSIGN expr
+
+array_dec
+    : SETLIST ID OBRACKET INTEGER CBRACKET EXCLAMATION
+
+array_assign
+    : array_call assignment EXCLAMATION
+
+array_call
+    : OBRACKET INTEGER CBRACKET
 
 return_statement
     : RECORD expr EXCLAMATION

@@ -10,36 +10,103 @@ CLASSES = \
 	Lexeme.java \
 	Lexer.java \
 	Parser.java \
+	Environment.java \
+	PrettyPrinter.java \
+	Evaluator.java \
 
-MAIN = Parser
+MAIN = Evaluator
 
 default: classes
 
 classes: $(CLASSES:.java=.class)
 
-recognizer : classes
+evaluator : classes
 
-test1 : Parser.class
-	$(JVM) Parser test1.mrk
+error1 : Parser.class
+	$(JVM) Parser error1.mrk
 
-test2: Parser.class
-	$(JVM) Parser test2.mrk
+error1x : Evaluator.class
+	$(JVM) Evaluator error1.mrk
 
-test3: Parser.class
-	$(JVM) Parser test3.mrk
+error2 : Parser.class
+	$(JVM) Parser error2.mrk
 
-test4: Parser.class
-	$(JVM) Parser test4.mrk
+error2x : Evaluator.class
+	$(JVM) Evaluator error2.mrk
 
-test5: Parser.class
-	$(JVM) Parser test5.mrk
+error3 : Parser.class
+	$(JVM) Parser error3.mrk
+
+error3x : Evaluator.class
+	$(JVM) Evaluator error3.mrk
+
+error4 : Parser.class
+	$(JVM) Parser error4.mrk
+
+error4x : Evaluator.class
+	$(JVM) Evaluator error4.mrk
+
+error5 : Parser.class
+	$(JVM) Parser error5.mrk
+
+error5x : Evaluator.class
+	$(JVM) Evaluator error5.mrk
+
+arrays : Parser.class
+	$(JVM) Parser arrays.mrk
+
+arraysx : Evaluator.class
+	$(JVM) Evaluator arrays.mrk
+
+conditionals : Parser.class
+	$(JVM) Parser conditionals.mrk
+
+conditionalsx : Evaluator.class
+	$(JVM) Evaluator conditionals.mrk
+
+recursion : Parser.class
+	$(JVM) Parser recursion.mrk
+
+recursionx : Evaluator.class
+	$(JVM) Evaluator recursion.mrk
+
+iteration : Parser.class
+	$(JVM) Parser iteration.mrk
+
+iterationx : Evaluator.class
+	$(JVM) Evaluator iteration.mrk
+
+functions : Parser.class
+	$(JVM) Parser functions.mrk
+
+functionsx : Evaluator.class
+	$(JVM) Evaluator functions.mrk
+
+lambda : Parser.class
+	$(JVM) Parser lambda.mrk
+
+lambdax : Evaluator.class
+	$(JVM) Evaluator lambda.mrk
+
+objects : Parser.class
+	$(JVM) Parser objects.mrk
+
+objectsx : Evaluator.class
+	$(JVM) Evaluator objects.mrk
 
 run : $(MAIN).class
-	$(JVM) $(MAIN) test1.mrk
-	$(JVM) $(MAIN) test2.mrk
-	$(JVM) $(MAIN) test3.mrk
-	$(JVM) $(MAIN) test4.mrk
-	$(JVM) $(MAIN) test5.mrk
+	$(JVM) $(MAIN) error1.mrk
+	$(JVM) $(MAIN) error2.mrk
+	$(JVM) $(MAIN) error3.mrk
+	$(JVM) $(MAIN) error4.mrk
+	$(JVM) $(MAIN) error5.mrk
+	$(JVM) $(MAIN) arrays.mrk
+	$(JVM) $(MAIN) conditionals.mrk
+	$(JVM) $(MAIN) recursion.mrk
+	$(JVM) $(MAIN) iteration.mrk
+	$(JVM) $(MAIN) functions.mrk
+	$(JVM) $(MAIN) lambda.mrk
+	$(JVM) $(MAIN) objects.mrk
 
 clean:
 	$(RM) *.class

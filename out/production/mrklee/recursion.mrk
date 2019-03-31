@@ -1,0 +1,29 @@
+# RECURSION example
+
+funky fib(var n)
+    {
+    if n <= 1 go
+        {
+        record n!
+        }
+    ifnone go
+        {
+        var minus = n-1!
+        var x = fib(minus)!
+        var minus2 = n-2!
+        var y = fib(minus2)!
+        var sum = x + y!
+        record sum!
+        }
+    }
+
+funky main()
+    {
+    var x = 0!
+    while x < 11
+        {
+        yell(fib(x))!
+        x = x + 1!
+        }
+    record!
+    }

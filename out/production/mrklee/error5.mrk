@@ -1,0 +1,21 @@
+# Error 5 testfile - will trigger semantic error (mismatch types)
+
+funky main()
+    {
+    yell("Here's some code that should work: ")!
+    var x = 9!
+    var y = 9!
+    if x == 9 go
+        {
+        yell("x and 9 are equal!")!
+        }
+
+    yell("And here's some code that shouldn't: ")!
+    var z = "nine"!
+    if x == "nine" go
+        {
+        yell("x and nine are equal!")!
+        }
+
+    record!
+    }

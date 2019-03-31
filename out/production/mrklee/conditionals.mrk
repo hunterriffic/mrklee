@@ -1,0 +1,32 @@
+# Conditionals testfile - to demonstrate the implementation of conditional statements
+
+funky main()
+    {
+    var aTitle = "'Despacito' by Justin Bieber"! # hit song
+    var bTitle = "'Cherry Bomb' by NCT 127"!     # slightly less popular
+
+    yell("Are we singing a hit song today?")!
+    var popularity = 0!
+
+    while popularity < 12
+        {
+        yell("Popularity is " + popularity)!
+        if popularity > 10 go
+            {
+            yell("We are singing the smash hit " + aTitle)!
+            }
+        if popularity == 5 go
+            {
+            yell("We are singing the mildly popular hit " + bTitle)!
+            yell("Not bad!")!
+            }
+        ifnone go
+            {
+            yell("Nope, nothing good.")!
+            }
+
+        popularity = popularity + 1!
+
+        }
+    record!
+    }

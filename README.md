@@ -80,7 +80,7 @@ This will run the test and report any syntax or semantic errors.
 ## Versioning
 
 I am using [GitHub](https://github.com/hunterriffic) for version control. The *mrklee* repository is currently private, 
-but will be made public after its release in the Spring.
+but will be made public after its release in the spring of 2019.
 
 ## Authors
 

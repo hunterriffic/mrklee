@@ -132,13 +132,13 @@ All example files are able to be printed and run unless otherwise stated.
 
 To run a pre-existing test:
  
- Use _make_ alongside the test name to **print** the testing code.
+ Use `make` alongside the test name to **print** the testing code.
 ```
 make conditionals
 make error2
 ```
 
-Use _make_ alongside the test name + 'x' to **run** the testing code.
+Use `make` alongside the `[test name]x` to **run** the testing code.
 ```
 make conditionalsx
 make error2x
@@ -147,7 +147,8 @@ make error2x
 
 Repeat for as many tests as desired.
 
-To run a test with custom input, enter the command "mrklee" and the file name. If the file is not in the working directory, include the file path.
+To run a test with custom input, enter the command "mrklee" and the file name. If the file is not located in the 
+working directory, include the file path.
 
 ```
 mrklee other_test.mrk
@@ -155,10 +156,11 @@ mrklee other_test.mrk
 
 This will run the test and report any syntax or semantic errors.
 
+
 ## Versioning
 
 I am using [GitHub](https://github.com/hunterriffic) for version control. The *mrklee* repository is currently private, 
-but will be made public after its release in the Spring.
+but will be made public after its release in the spring of 2019.
 
 ## Authors
 

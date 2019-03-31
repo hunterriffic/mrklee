@@ -35,7 +35,7 @@ public class Environment implements Types {
 
     static boolean sameVariable(String variable, Lexeme check)
         {
-        if (debug) System.out.println("ENVIRONMENTS - sameVariable: check's value is " + check.value.toString() +", and variable is " + variable);
+        if (debug) System.out.println("ENVIRONMENTS - sameVariable: comparing " + check.value.toString() + " with " + variable);
         if (variable.equals(check.value.toString())) {
             return true;
         }
@@ -47,19 +47,22 @@ public class Environment implements Types {
         if (debug) System.out.println("ENVIRONMENTS - lookup: Looking for value in environment");
         while (env != null)
             {
-            Lexeme table = car(env);
-            Lexeme vars = car(table);
-            Lexeme vals = cdr(table);
+            Lexeme table = env.left;
+            Lexeme vars = table.left;
+            Lexeme vals = table.right;
             while (vars != null)
                 {
-                if (sameVariable(variable,car(vars)))
+                if (sameVariable(variable,vars.left))
                     {
                     if (debug)
                         {
-                        System.out.print("ENVIRONMENTS - lookup: found it, it is ");
-                        car(vals).display();
+                        System.out.println("ENVIRONMENTS - lookup: found it");
+                        Lexeme.printDebug(vals);
+                        if (vals.left != null) {System.out.print("It is "); car(vals).display();}
+                        else System.out.print("But its car() is null. ");
                         }
-                    return car(vals);
+                    if (vals.left != null) return vals.left;
+                    else return vals;
                     }
                 vars = cdr(vars);
                 vals = cdr(vals);
@@ -123,18 +126,6 @@ public class Environment implements Types {
             }
         return cons(ENV, cons(VALUES, variables, values), env);
         }
-    /*
-    // displaying the environment; this function should have two forms; one form displays only the local table, the other all tables
-    static void printAllEnvironments(Lexeme tree)
-        {
-            int i = 0;
-            while (tree != null)
-                {
-                System.out.println("Table " + i + ":");
-                System.out.println("ID \'" + car(tree).value +"/' is" + cdr(tree));
-                }
-        }
-    */
 
     // FOR TESTING ONLY
     public static void main(String[] args)

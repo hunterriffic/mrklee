@@ -772,7 +772,8 @@ public class Parser implements Types
         if (debug) System.out.println("INSIDE OF RETURN_STATE");
         match(RECORD);
         Lexeme e = null;
-        if (exprPending()) expr();
+        if (exprPending())
+            e = expr();
         match(EXCLAMATION);
         return cons(RETURN_STATEMENT,e,null);
         }

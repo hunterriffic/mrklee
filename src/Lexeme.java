@@ -141,9 +141,11 @@ public class Lexeme implements Types
     public static void printDebug(Lexeme l)
         {
         System.out.println("[[printDebug]]");
+        if (l == null) {System.out.println("This lexeme is null."); return;}
         String type = l.type;
         Object value = l.value;
-        if (type.equals("STRING")) System.out.println(type + ": \"" + value + "\"");
+        if (type == null) System.out.println("Type is NULL.");
+        else if (type.equals("STRING")) System.out.println(type + ": \"" + value + "\"");
         else if (type.equals("INTEGER")) System.out.println(type + ": " + value);
         else if (type.equals("REAL")) System.out.println(type + ": " + value);
         else if (type.equals("ID")) System.out.println(type + ": " + value);

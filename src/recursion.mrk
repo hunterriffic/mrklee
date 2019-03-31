@@ -8,23 +8,22 @@ funky fib(var n)
         }
     ifnone go
         {
-        var x = fib(n-1)!
-        var y = fib(n-2)!
+        var minus = n-1!
+        var x = fib(minus)!
+        var minus2 = n-2!
+        var y = fib(minus2)!
         var sum = x + y!
-        return sum!
+        record sum!
         }
     }
 
 funky main()
     {
-    var one = fib(1)!
-    yell(one)!
-    var two = fib(2)!
-    yell(2)!
-    var five = fib(5)!
-    yell(5)!
-    var ten = fib(10)!
-    yell(10)!
-
+    var x = 0!
+    while x < 11
+        {
+        yell(fib(x))!
+        x = x + 1!
+        }
     record!
     }

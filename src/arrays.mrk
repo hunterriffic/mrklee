@@ -9,21 +9,21 @@ funky main()
     yell("Inserting 100 values into array... ")!
     while i < 100
         {
-        s[i] = val!
-        yell(i)!
-        yell(s[i])!
-        val = val + 10!
+        #yell("Inserting into index " + i)!
+        #yell("Inserting the value " + val)!
+        s[i] = i * 10!
+        #yell("actually inserted " + s[i])!
+        if i == 50 go { yell("Halfway there!")!}
         i = i + 1!
         }
 
     yell("Print 100 values from array: ")!
-    yell(s[1])!
-    var j = 0!
-    while j < 5
+
+    i = 0!
+    while i < 100
         {
-        yell(j)!
-        yell(s[j])!
-        j = j + 1!
+        yell(s[i])!
+        i = i + 1!
         }
     record!
     }

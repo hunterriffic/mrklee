@@ -29,7 +29,11 @@ public class Evaluator implements Types {
             case CHAR:  // FIXME check
                 return tree;
             case ID:
-                if (debug) System.out.println(" [evaluating ID]");
+                if (debug)
+                    {
+                    System.out.println(" [evaluating ID: " + tree.value.toString() + "]");
+                    Lexeme.printDebug(tree);
+                    }
                 Lexeme l = Environment.lookupEnv(tree.value.toString(),env);
                 if (l == null) {
                     System.out.println("SEMANTIC ERROR: " + tree.value.toString() + " is undefined.");
@@ -113,8 +117,8 @@ public class Evaluator implements Types {
             {
             System.out.println(" [evaluating fcall: " + tree.left.value.toString() + "] ");
             Lexeme.printDebug(tree);
-            tree.right.display();
-            if (tree.right.left != null) tree.right.left.display();
+            Lexeme.printDebug(tree.right);
+            if (tree.right.left != null) Lexeme.printDebug(tree.right.left);
             }
         Lexeme closure = Environment.lookupEnv(tree.left.value.toString(),env);
         Lexeme prelimArgs = getArgs(tree);
@@ -124,10 +128,11 @@ public class Evaluator implements Types {
 //            return evalBuiltIn(closure,args);
         if (debug) {Lexeme.printDebug(closure); Lexeme.printDebug(closure.right); Lexeme.printDebug(closure.right.right);}
         Lexeme params = getParams(closure.right); // closure.right.right.left.left;
-        if (debug && params != null) Lexeme.printDebug(params);
+        if (debug && params != null) {Lexeme.printDebug(params); System.out.println(" [got params] ");}
         Lexeme body = getBody(closure.right);
         Lexeme senv = closure.left; 	// static env
         Lexeme args = evalArgs(prelimArgs,env);
+        if (debug) System.out.println(" [FCALL: About to extend!] ");
         Lexeme lenv = Environment.extendEnv(params,args,senv);
         return evalBlock(body,lenv);
         }
@@ -192,15 +197,25 @@ public class Evaluator implements Types {
 
     public static Lexeme evalArgs(Lexeme tree, Lexeme env)
         {
-        if (debug) System.out.println(" [evaluating args] ");
+        if (debug)
+            {
+            System.out.println(" [evaluating args] ");
+            Lexeme.printDebug(tree);
+            }
         Lexeme argument = tree;
         Lexeme vals = null;
         while (argument != null)
             {
             Lexeme l = vals;
-            vals = eval(argument,vals);
+            vals = eval(argument,env);
+            if (debug) Lexeme.printDebug(vals);
             vals.right = l;
             argument = argument.right;
+            }
+        if (debug)
+            {
+            System.out.println(" [evalArgs: returning vals] ");
+            Lexeme.printDebug(vals);
             }
         return vals;
         }
@@ -338,8 +353,13 @@ public class Evaluator implements Types {
             tree.left.display();
             tree.left.left.display();
             }
+        if (tree.left == null)
+            {
+            System.out.println("SEMANTIC ERROR: Nothing to print!");
+            return;
+            }
         // Case 1: String
-        if (tree.left.type.equals(STRING))
+        else if (tree.left.type.equals(STRING))
             {
             System.out.println(tree.left.value.toString());
             return;
@@ -374,7 +394,11 @@ public class Evaluator implements Types {
 
     public static Lexeme evalReturn(Lexeme tree, Lexeme env)
         {
-        if (debug) System.out.println(" [evaluating return] ");
+        if (debug)
+            {
+            System.out.println(" [evaluating return] ");
+            Lexeme.printDebug(tree);
+            }
         if (tree.left != null) return eval(tree.left,env);
         return null;
         }
@@ -1058,8 +1082,20 @@ public class Evaluator implements Types {
 
     public static Lexeme evalArrayCall(Lexeme tree, Lexeme env)
         {
-        if (debug) System.out.println(" [evaluating arrayCall] ");
-        //int index = (int)eval(tree.left,env).value;
+        if (debug)
+            {
+            System.out.println(" [evaluating arrayCall] ");
+            Lexeme.printDebug(tree);
+            Lexeme.printDebug(tree.left);
+            if (tree.right != null) Lexeme.printDebug(tree.right);
+            }
+
+        if (tree.right != null)
+            {
+            Lexeme id = eval(tree.left, env);
+            int index = (int) eval(tree.right.left, env).value;
+            return evalGetArray(id, index);
+            }
         return eval(tree.left,env);
         }
 

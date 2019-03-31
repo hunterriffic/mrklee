@@ -9,18 +9,18 @@ programming language with limited functionality. Check it out!
 ## Getting Started
 
 This directory includes several example tests to demonstrate different capabilities of MRKLEE:
-* *error1.mrk* - results in an intended SYNTAX ERROR
-* *error2.mrk* - (SYNTAX)
-* *error3.mrk* - (SYNTAX)
-* *error4.mrk* - results in an intended SEMANTIC ERROR
-* *error5.mrk* - (SEMANTIC)
+* *error1.mrk* - results in an intended SYNTAX error
+* *error2.mrk* - results in an intended SYNTAX error
+* *error3.mrk* - results in an intended SYNTAX error
+* *error4.mrk* - results in an intended SEMANTIC error
+* *error5.mrk* - results in an intended SEMANTIC error
 * *arrays.mrk*
 * *conditionals.mrk*
 * *recursion.mrk*
 * *iteration.mrk*
 * *functions.mrk* - function passing, returns, and nested functions
-* *lambda.mrk [PRINTING ONLY]* 
-* *objects.mrk* - get and update field, method call
+* *lambda.mrk [COMING SOON]* 
+* *objects.mrk [COMING SOON]* - get and update field, method call
 
 All example files are able to be printed and run unless otherwise stated.
 

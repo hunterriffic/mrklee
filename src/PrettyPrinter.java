@@ -1,3 +1,8 @@
+/**
+ * Pretty Printer for MRKLEE, the Modern Right-reKursive Language for Everyday Expressions.
+ * Designed and implemented by Hunter James, with guidance from Dr. John Lusth.
+ */
+
 public class PrettyPrinter implements Types
     {
     public static void pp(Lexeme tree)

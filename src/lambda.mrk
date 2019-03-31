@@ -1,0 +1,13 @@
+# LAMBDA example
+
+funky main()
+{
+    lambda(var x)
+        {
+        x = x + 1!
+        record x!
+        }
+
+    yell("Lambda functions are not yet implemented in MRKLEE.")!
+    record!
+}

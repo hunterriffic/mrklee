@@ -1,0 +1,45 @@
+# Functions testfile - to demonstrate the implementation of functions
+
+funky singThatSong(var popularity)
+    {
+    var aTitle = "Despacito by Justin Bieber"!    # hit song
+    var bTitle = "Cherry Bomb by NCT 127"!     # slightly less popular
+    yell("Are we singing a hit song today?")!
+    yell(popularity)!
+    yell("passed popularity")!
+    if popularity > 10 go
+        {
+        yell("We are singing the smash hit " + aTitle)!
+        }
+    if popularity == 5 go
+        {
+        yell("We are singing the mildly popular hit " + bTitle)!
+        yell("Not bad!")!
+        }
+    ifnone go
+        {
+        yell("Nope, nothing good.")!
+        }
+    }
+
+funky main()
+    {
+    var start = 0!
+    var end = 100!
+    #var popularity = 0!
+
+    # Now it's time to sing the song
+    while start < 20
+        {
+        if start == 5 go
+            {
+            singThatSong(5)!
+            }
+        start = start + 1!
+        }
+        singThatSong(popularity)!
+
+    record!
+    }
+
+

@@ -8,14 +8,18 @@ public interface Types
     public static final String CPAREN = "CPAREN";
     public static final String OBRACE = "OBRACE";
     public static final String CBRACE = "CBRACE";
+    public static final String OBRACKET = "OBRACKET";
+    public static final String CBRACKET = "CBRACKET";
     public static final String COMMA = "COMMA";
     public static final String DOUBLE_QUOTE = "DOUBLE_QUOTE";
     public static final String SINGLE_QUOTE = "SINGLE_QUOTE";
+    public static final String SEMICOLON = "SEMICOLON";
     public static final String DOT = "DOT";
     public static final String PLUS = "PLUS";
     public static final String MINUS = "MINUS";
     public static final String BY = "BY";
     public static final String TIMES = "TIMES";
+    public static final String MOD = "MOD";
     public static final String ASSIGN = "ASSIGN";
     public static final String LESS_THAN = "LESS_THAN";
     public static final String LESS_EQUALS = "LESS_EQUALS";
@@ -74,5 +78,11 @@ public interface Types
     public static final String LAMBDA = "LAMBDA";
     public static final String CLOSURE = "CLOSURE";
     public static final String FNAME = "FNAME";
-
+    public static final String MAIN = "MAIN";
+    public static final String BOOLEAN = "BOOLEAN";
+    public static final String ARRAY = "ARRAY";
+    public static final String ARRAY_DEC = "ARRAY_DEC";
+    public static final String ARRAY_CALL = "ARRAY_CALL";
+    public static final String ARRAY_ASSIGN = "ARRAY_ASSIGN";
+    public static final String SETLIST = "SETLIST";
 }

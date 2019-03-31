@@ -1,14 +1,28 @@
 
 # MRKLEE
 
-The **M**odern **R**ight-re**K**ursive **L**anguage for **E**veryday **E**xpressions.
+The **M**odern **R**ight-re**K**ursive **L**anguage for **E**veryday **E**xpressions is a fun, musically inspired 
+programming language with limited functionality. Check it out!
 
 *Written and designed by Hunter James*
 
 ## Getting Started
 
-This directory includes five tests (test1, test2, test3, test4, test5) to verify the accuracy of the Environment. 
-Please note that test5 is *intended to fail* on line 16 due to a syntax error and will terminate with a nonzero error code.
+This directory includes several example tests to demonstrate different capabilities of MRKLEE:
+* *error1.mrk* - results in an intended SYNTAX ERROR
+* *error2.mrk* - (SYNTAX)
+* *error3.mrk* - (SYNTAX)
+* *error4.mrk* - results in an intended SEMANTIC ERROR
+* *error5.mrk* - (SEMANTIC)
+* *arrays.mrk*
+* *conditionals.mrk*
+* *recursion.mrk*
+* *iteration.mrk*
+* *functions.mrk* - function passing, returns, and nested functions
+* *lambda.mrk [PRINTING ONLY]* 
+* *objects.mrk* - get and update field, method call
+
+All example files are able to be printed and run unless otherwise stated.
 
 ### Prerequisites
 
@@ -18,23 +32,34 @@ Java version 7.0 or later. To check your version, use the command:
 java -version
 ```
 
-### Testing the Environment
+### Testing MRKLEE
 
-To run a pre-existing test, use "make" alongside the test name.
+*NOTE:* All test files must end with a newline.
 
+To run a pre-existing test:
+ 
+ Use _make_ alongside the test name to **print** the testing code.
 ```
-make test1
-```
-
-Repeat for all five tests.
-
-To run a test with custom input, enter the command "Recognizer" and the file path.
-
-```
-Recognizer other_test.mrk
+make conditionals
+make error2
 ```
 
-Note once again that test5 is *intended to fail* on line 16 due to a syntax error and will terminate with a nonzero error code.
+Use _make_ alongside the test name + 'x' to **run** the testing code.
+```
+make conditionalsx
+make error2x
+```
+
+
+Repeat for as many tests as desired.
+
+To run a test with custom input, enter the command "mrklee" and the file name. If the file is not in the working directory, include the file path.
+
+```
+mrklee other_test.mrk
+```
+
+This will run the test and report any syntax or semantic errors.
 
 ## Versioning
 
@@ -43,9 +68,9 @@ but will be made public after its release in the Spring.
 
 ## Authors
 
-* **Hunter James** - *Design & Implementation* - [hunterriffic](https://github.com/hunterriffic)
+* **Hunter James** - *Design, Implementation & Testing* - [hunterriffic](https://github.com/hunterriffic)
 
 ## Acknowledgments
 
-* **Dr. John Lusth** - *Guidance & Instruction* - [beastie](http://beastie.cs.ua.edu)
+* **Dr. John Lusth** - *Instruction & Inspiration* - [beastie](http://beastie.cs.ua.edu)
 

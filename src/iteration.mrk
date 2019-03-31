@@ -1,0 +1,32 @@
+# ITERATION test file
+
+funky main()
+    {
+    var numOne = 1!
+    var largerNum = 10!
+
+    # Demonstrate while loops with nested conditionals
+    while numOne < largerNum
+        {
+        numOne = numOne + 1!
+        if numOne==2 go {yell("numOne is two")!}
+        or if numOne==5 go {yell("numOne is five")!}
+        ifnone go {yell("They're not the same")!}
+        }
+
+    yell("They're the same!")!
+    yell("Incrementing largerNum...")!
+
+    largerNum = largerNum * 4!
+
+    while numOne != largerNum
+        {
+        yell("largerNum now " + largerNum)!
+        largerNum = largerNum / 2!
+        yell("numOne is " + numOne)!
+        }
+
+    yell("They're the same again!")!
+
+    record 0!
+    }

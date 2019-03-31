@@ -1,0 +1,31 @@
+# Error 3 testfile - will trigger syntax error
+
+funky main()
+    {
+    # Here's a sad attempt at writing in MRKLEE style
+    var i = 0!
+
+    if i == 0 go
+        {
+        yell("x is 0")!
+        }
+
+    yell("About to use parentheses for our while loop condition --> WRONG!")!
+
+    while (i < 17)
+        {
+        if i == 2 go
+            {
+            yell("i is 2!")!
+            }
+        ifnone go
+            {
+            yell("i is not 2")!
+            }
+        i = i + 1!
+        }
+    yell("Thank you for joining us today.")!
+    record!
+    }
+
+

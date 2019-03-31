@@ -1,0 +1,21 @@
+# Error 2 testfile - will trigger syntax error
+
+funky displayError()
+    {
+    yell("Hm, something went wrong.")!
+    }
+
+funky main()
+    {
+    var x = 1!
+    yell("In this house, we use EXCLAMATION POINTS!");
+    if x != 1 go
+        {
+        displayError()!
+        }
+    ifnone go
+        {
+        yell("All clear!")!
+        }
+    record 0!
+    }

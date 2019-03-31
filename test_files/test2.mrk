@@ -7,7 +7,7 @@ funky singThatSong(var title)
         {
         yell(title)!
         }
-    if none go
+    ifnone go
         {
         yell("Nothing today")!
         }
@@ -20,7 +20,7 @@ funky main()
     var title = "Despacito"!
 
     # Now it's time to sing the song
-    while start < end
+    while start < 10
         {
         singThatSong(title)!
         start = start + 1!

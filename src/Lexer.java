@@ -112,6 +112,8 @@ public class Lexer implements Types
                 return new Lexeme(VAR);
             case "lambda":
                 return new Lexeme(LAMBDA);
+            case "setlist":
+                return new Lexeme(SETLIST);
             default: // must be a ID (variable name)!
                 return new Lexeme(ID, token);
         }
@@ -160,11 +162,17 @@ public class Lexer implements Types
             //single character tokens
             case '(': return new Lexeme(OPAREN);
             case ')': return new Lexeme(CPAREN);
+            case '[': return new Lexeme(OBRACKET);
+            case ']': return new Lexeme(CBRACKET);
+            case '{': return new Lexeme(OBRACE);
+            case '}': return new Lexeme(CBRACE);
+            case ';': return new Lexeme(SEMICOLON);
             case ',': return new Lexeme(COMMA);
             case '+': return new Lexeme(PLUS);
             case '-': return new Lexeme(MINUS);
             case '*': return new Lexeme(TIMES);
             case '/': return new Lexeme(BY);
+            case '%': return new Lexeme(MOD);
             case '<':
             {
                 ch = readChar();
@@ -205,8 +213,6 @@ public class Lexer implements Types
                     return new Lexeme(EXCLAMATION);
                 }
             }
-            case '{': return new Lexeme(OBRACE);
-            case '}': return new Lexeme(CBRACE);
             default:
                 // multi-character tokens (only numbers, variables/keywords and strings)
                 if (Character.isDigit(ch))

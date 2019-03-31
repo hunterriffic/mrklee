@@ -1,0 +1,13 @@
+# Error 4 testfile - will trigger semantic error (variable undefined)
+
+funky main()
+    {
+    yell("Here's some code that should work: ")!
+    var x = 9!
+    yell(x)!
+
+    yell("And here's some code that shouldn't: ")!
+    yell(y)!
+
+    record!
+    }

@@ -5,7 +5,7 @@
 
 public class Environment implements Types {
 
-    static boolean debug = true;
+    static boolean debug = false;
     static Lexeme cons(String type, Lexeme l, Lexeme r) { return new Lexeme(type, l, r); }
     static Lexeme car(Lexeme l) {
         return l.left;
@@ -22,11 +22,11 @@ public class Environment implements Types {
 
     static Lexeme createEnv()
         {
-        if (debug) System.out.println("Creating a new environment");
+        if (debug) System.out.println("ENVIRONMENTS - create: Creating a new environment");
         Lexeme env = cons(ENV,cons(VALUES,null,null),null);
         if (debug)
             {
-            System.out.print("The environment is ");
+            System.out.print("ENVIRONMENTS - create: The environment is ");
             env.display();
             System.out.print("\n");
             }
@@ -35,8 +35,7 @@ public class Environment implements Types {
 
     static boolean sameVariable(String variable, Lexeme check)
         {
-        System.out.println("check's value is " + check.value.toString() +", and variable is " + variable);
-        check.display();
+        if (debug) System.out.println("ENVIRONMENTS - sameVariable: check's value is " + check.value.toString() +", and variable is " + variable);
         if (variable.equals(check.value.toString())) {
             return true;
         }
@@ -45,7 +44,7 @@ public class Environment implements Types {
 
     static Lexeme lookupEnv(String variable, Lexeme env)
         {
-        if (debug) System.out.println("Looking for value in environment");
+        if (debug) System.out.println("ENVIRONMENTS - lookup: Looking for value in environment");
         while (env != null)
             {
             Lexeme table = car(env);
@@ -55,6 +54,11 @@ public class Environment implements Types {
                 {
                 if (sameVariable(variable,car(vars)))
                     {
+                    if (debug)
+                        {
+                        System.out.print("ENVIRONMENTS - lookup: found it, it is ");
+                        car(vals).display();
+                        }
                     return car(vals);
                     }
                 vars = cdr(vars);
@@ -62,13 +66,13 @@ public class Environment implements Types {
                 }
             env = cdr(env);
             }
-        System.out.println("ERROR: variable " + variable + " is undefined");
+        //System.out.println("ENVIRONMENT ERROR: variable " + variable + " is undefined");
         return null;
         }
 
     static Lexeme update(String variable, Lexeme env, Object replacement)
         {
-        if (debug) System.out.println("Updating value in environment");
+        if (debug) System.out.println("ENVIRONMENTS - update: Updating value in environment");
         while (env != null)
             {
             Lexeme table = car(env);
@@ -96,10 +100,8 @@ public class Environment implements Types {
         {
         if (debug)
             {
-            System.out.print("Adding variable ");
-            variable.display();
-            System.out.println(" with value " + variable.value.toString() + " and value type:");
-            value.display();
+            System.out.print("ENVIRONMENTS - insert: Adding variable type " + variable.type +
+                    " with value " + variable.value.toString() + " and value type " + value.type + "\n");
             }
         Lexeme table = car(env);
         setCar(table,cons(JOIN,variable,car(table)));
@@ -111,10 +113,12 @@ public class Environment implements Types {
         {
         if (debug)
             {
-            System.out.print("Extending the environment with ");
-            variables.display();
+            System.out.print("ENVIRONMENTS: Extending the environment with ");
+            if (variables != null) variables.display();
+            else System.out.print("NULL");
             System.out.print(" and ");
-            values.display();
+            if (values != null) values.display();
+            else System.out.print("NULL");
             System.out.print("\n");
             }
         return cons(ENV, cons(VALUES, variables, values), env);
@@ -131,56 +135,15 @@ public class Environment implements Types {
                 }
         }
     */
+
+    // FOR TESTING ONLY
     public static void main(String[] args)
         {
-//        Lexeme env = createEnv();
-//        Lexeme x = new Lexeme(INTEGER,5);
-//        insertEnv(x,x,env);
-        //Parser tree =  new Parser;
         System.out.println("Creating new Environment");
         Lexeme GlobalTree = createEnv();
-        //printAllEnvironments(GlobalTree);
         System.out.println("Inserting variable \'x\' with value 3");
         Lexeme idLexeme = new Lexeme(ID, "x");
         Lexeme valLexeme = new Lexeme(INTEGER, 3);
         insertEnv(idLexeme, valLexeme, GlobalTree);
-
-        //printAllEnvironments(GlobalTree);
-
-        System.out.println("Extending the environment with y:4 and z:\"hello\"\n");
-        Lexeme localTree = createEnv();
-        idLexeme = new Lexeme(ID, "y");
-        valLexeme = new Lexeme(INTEGER, 4);
-        System.out.println("ID \'y\' has value " + insertEnv(idLexeme, valLexeme, localTree).value);
-        idLexeme = new Lexeme(ID, "z");
-        valLexeme = new Lexeme(STRING, "hello");
-        insertEnv(idLexeme, valLexeme, localTree);
-        System.out.println("EXTENDING...");
-        GlobalTree = extendEnv(car(car(localTree)), cdr(car(localTree)), GlobalTree);
-        //printAllEnvironments(GlobalTree);
-
-        System.out.println("Inserting variable w with value \"why\" into most local environment");
-
-        idLexeme = new Lexeme(ID, "w");
-        valLexeme = new Lexeme(STRING, "why");
-        System.out.println("ID \'w\' has value " + insertEnv(idLexeme, valLexeme, GlobalTree).value);
-        System.out.println();
-
-
-        //printAllEnvironments(GlobalTree);
-
-        System.out.println("Finding value of variable y");
-        System.out.println("ID \'y\' has value " + lookupEnv("y", GlobalTree).value);
-        System.out.println();
-        System.out.println("Finding value of variable x");
-        System.out.println("ID \'x\' has value " + lookupEnv("x", GlobalTree).value);
-        System.out.println();
-        System.out.println("Updating value of variable x to 6");
-        System.out.println("ID \'x\' value updated to " + update("x", GlobalTree,6).value);
-        System.out.println();
-        //printAllEnvironments(GlobalTree);
-        System.out.println();
-
-        System.exit(0);
         }
     }

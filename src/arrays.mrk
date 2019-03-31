@@ -1,0 +1,29 @@
+# Arrays testfile - to demonstrate the ability to create, access and insert into arrays
+
+funky main()
+    {
+    yell("Demonstrating arrays: ")!
+    var i = 0!
+    var val = 10!
+    setlist s[100]!
+    yell("Inserting 100 values into array... ")!
+    while i < 100
+        {
+        s[i] = val!
+        yell(i)!
+        yell(s[i])!
+        val = val + 10!
+        i = i + 1!
+        }
+
+    yell("Print 100 values from array: ")!
+    yell(s[1])!
+    var j = 0!
+    while j < 5
+        {
+        yell(j)!
+        yell(s[j])!
+        j = j + 1!
+        }
+    record!
+    }

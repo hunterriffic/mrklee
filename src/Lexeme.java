@@ -4,6 +4,8 @@ public class Lexeme implements Types
     Object value;
     Lexeme left;
     Lexeme right;
+    boolean bool;
+    Lexeme[] arr;
 
     public Lexeme(String t)
         {
@@ -11,6 +13,8 @@ public class Lexeme implements Types
         value = null;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
 
     public Lexeme(String t, Object v)
@@ -19,7 +23,29 @@ public class Lexeme implements Types
         value = v;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
+
+    public Lexeme(String t, Lexeme[] array)
+        {
+        type = t;
+        arr = array;
+        value = null;
+        left = null;
+        right = null;
+        bool = false;
+        }
+    // for conditionals
+    public Lexeme(String t, boolean tf)
+        {
+        type = t;
+        value = null;
+        left = null;
+        right = null;
+        bool = tf;
+        arr = null;
+    }
 
     //  String type
     public Lexeme(String t, String str)
@@ -28,6 +54,8 @@ public class Lexeme implements Types
         value = str;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
 
     // Character type
@@ -37,6 +65,8 @@ public class Lexeme implements Types
         value = c;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
 
 
@@ -52,6 +82,8 @@ public class Lexeme implements Types
         value = i;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
 
     // Real type
@@ -61,6 +93,8 @@ public class Lexeme implements Types
         value = r;
         left = null;
         right = null;
+        bool = false;
+        arr = null;
         }
 
     // for cons
@@ -70,6 +104,8 @@ public class Lexeme implements Types
         left = l;
         right = r;
         value = null;
+        bool = false;
+        arr = null;
         }
 
     void display()
@@ -101,5 +137,25 @@ public class Lexeme implements Types
     {
         l.left = s;
     }
+
+    public static void printDebug(Lexeme l)
+        {
+        System.out.println("[[printDebug]]");
+        String type = l.type;
+        Object value = l.value;
+        if (type.equals("STRING")) System.out.println(type + ": \"" + value + "\"");
+        else if (type.equals("INTEGER")) System.out.println(type + ": " + value);
+        else if (type.equals("REAL")) System.out.println(type + ": " + value);
+        else if (type.equals("ID")) System.out.println(type + ": " + value);
+        else if (type.equals("CHAR")) System.out.println(type + ": \'" + value + "\'");
+        else if (type != "UNKNOWN")
+            {
+            System.out.println("type: " + type);
+            if (l.left != null) System.out.println("left: " + l.left.type);
+            else System.out.println("left: null");
+            if (l.right != null) System.out.println("right: " + l.right.type);
+            else System.out.println("right: null");
+            }
+        }
 
 }

@@ -1,32 +1,42 @@
 # Conditionals testfile - to demonstrate the implementation of conditional statements
 
+funky rockOn(var mode)
+    {
+    var genre = "rock"!
+    if mode==1 go {genre = "pop"!}
+    or if mode==2 go {genre = "jazz"!}
+    or if mode==3 go {genre = "classical"!}
+    or if mode==4 go {genre = "k-pop"!}
+    ifnone go {genre = "downtempo Moroccan groove"!}
+
+    yell("You've picked the genre: " + genre)!
+
+    record!
+    }
+
 funky main()
     {
-    var aTitle = "'Despacito' by Justin Bieber"! # hit song
-    var bTitle = "'Cherry Bomb' by NCT 127"!     # slightly less popular
+    var numOne = 1!
+    var largerNum = 10!
 
-    yell("Are we singing a hit song today?")!
-    var popularity = 0!
-
-    while popularity < 12
+    while numOne < largerNum
         {
-        yell("Popularity is " + popularity)!
-        if popularity > 10 go
+        if numOne==1 go
             {
-            yell("We are singing the smash hit " + aTitle)!
+            rockOn(numOne)!
             }
-        if popularity == 5 go
+        or if numOne==2 go
             {
-            yell("We are singing the mildly popular hit " + bTitle)!
-            yell("Not bad!")!
+            rockOn(numOne)!
             }
         ifnone go
             {
-            yell("Nope, nothing good.")!
+            if numOne==3 go {rockOn(numOne)!}
+            or if numOne==4 go {rockOn(numOne)!}
             }
-
-        popularity = popularity + 1!
-
+        numOne = numOne + 1!
         }
+    rockOn(largerNum)!
+
     record!
     }

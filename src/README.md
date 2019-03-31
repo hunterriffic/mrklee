@@ -147,6 +147,8 @@ make error2x
 
 Repeat for as many tests as desired.
 
+Additionally, `make run` can be used to run all available tests at once.
+
 To run a test with custom input, enter the command "mrklee" and the file name. If the file is not located in the 
 working directory, include the file path.
 

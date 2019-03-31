@@ -26,7 +26,7 @@ public class Evaluator implements Types {
                 return tree;
             case STRING:
                 return tree;
-            case CHAR:  // FIXME check
+            case CHAR:
                 return tree;
             case ID:
                 if (debug)
@@ -59,8 +59,8 @@ public class Evaluator implements Types {
                 return evalUnary(tree,env);
             case ID_STATEMENT:
                 return evalIdStatement(tree,env);
-//            case LAMBDA:
-//                break;
+            case LAMBDA:
+                break;
             case FCALL:
                 return evalFcall(tree,env);
             case CHECK_VALUE:
@@ -91,7 +91,7 @@ public class Evaluator implements Types {
             case ARRAY_ASSIGN:
                 return evalArrayAssign(tree,env);
             default:
-                System.out.print(" ~bad " + tree.type + " expression~ ");
+                System.out.print(" SEMANTIC ERROR: bad " + tree.type + " expression ");
             }
         return null;
         }
@@ -127,7 +127,7 @@ public class Evaluator implements Types {
 //        if (isBuiltIn(closure))
 //            return evalBuiltIn(closure,args);
         if (debug) {Lexeme.printDebug(closure); Lexeme.printDebug(closure.right); Lexeme.printDebug(closure.right.right);}
-        Lexeme params = getParams(closure.right); // closure.right.right.left.left;
+        Lexeme params = getParams(closure.right);
         if (debug && params != null) {Lexeme.printDebug(params); System.out.println(" [got params] ");}
         Lexeme body = getBody(closure.right);
         Lexeme senv = closure.left; 	// static env

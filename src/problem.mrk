@@ -1,0 +1,13 @@
+# The Problem: reading in integers from a file and summing them
+
+funky main(setlist args[])
+    {
+    # read integers from file
+    var sum = 0!
+    while endOfFile != 1
+        {
+        sum = sum + arg[i]!
+        }
+    yell("The sum is " + sum)!
+    record!
+    }

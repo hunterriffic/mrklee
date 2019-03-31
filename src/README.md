@@ -1,8 +1,8 @@
 
 # MRKLEE
 
-The **M**odern **R**ight-re**K**ursive **L**anguage for **E**veryday **E**xpressions is a fun, musically inspired 
-programming language with limited functionality. Check it out!
+The **M**odern **R**ight-re**K**ursive **L**anguage for **E**veryday **E**xpressions is a fun, musically-inspired, 
+dynamically-typed programming language with limited functionality. Check it out!
 
 *Written and designed by Hunter James*
 
@@ -21,6 +21,7 @@ This directory includes several example tests to demonstrate different capabilit
 * *functions.mrk* - function passing, returns, and nested functions
 * *lambda.mrk [COMING SOON]* 
 * *objects.mrk [COMING SOON]* - get and update field, method call
+* *problem.mrk [COMING SOON]* - read and sum integers from a file
 
 All example files are able to be printed and run unless otherwise stated.
 
@@ -31,8 +32,23 @@ Java version 7.0 or later. To check your version, use the command:
 ```
 java -version
 ```
+### Style Guidelines
+_MRKLEE_ has been written with the musician in mind. Some important syntactical choices have been made as a result of 
+this, notably:
+* _funky_ : precedes all function definitions
+* _record_ : indicates the return value of a function
+* _yell_ : produces output to standard I/O
+* _!_ : is used to distinguish between lines
+* _setlist_ : precedes all array definitions
 
-### Testing MRKLEE
+Also note that conditional statements do not use parenthesis, and rather have conditions bounded by 
+keywords rather than punctuation. Options for conditionals are  :
+* _if [...] go_
+* _or if [...] go_
+* _ifnone go_
+
+
+### Testing
 
 *NOTE:* All test files must end with a newline.
 
